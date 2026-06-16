@@ -8895,7 +8895,7 @@ const SaleInvoices = () => {
                 // Add status filter (always 'Completed' for stock requests)
                 params.append('status', 'Completed');
 
-                const url = `/stock-requests/export-excel?${params.toString()}`;
+                const url = `/stockrequest/export-excel?${params.toString()}`;
                 console.log('Export URL:', url);
 
                 // Make API request to get the Excel file

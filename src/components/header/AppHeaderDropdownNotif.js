@@ -122,7 +122,7 @@ const AppHeaderDropdownNotif = () => {
   };
 
   const handleViewAll = () => {
-    navigate('/stock-requests');
+    navigate('/stockrequest');
   };
 
   return (
