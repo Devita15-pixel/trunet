@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Incentive Management System</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            padding: 20px;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4299e1;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(43, 108, 176, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .header-left p {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-top: 4px;
+            font-weight: 300;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-badge i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== STATS ROW ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        .stat-card .value.green { color: #38a169; }
+        .stat-card .value.blue { color: #3182ce; }
+        .stat-card .value.purple { color: #805ad5; }
+        .stat-card .value.orange { color: #dd6b20; }
+        .stat-card .sub {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-top: 4px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f7fafc;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        .card-header h3 i {
+            margin-right: 10px;
+            color: #4299e1;
+        }
+
+        .card-header .badge {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        /* ===== SCHEME SELECTOR ===== */
+        .scheme-selector {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .scheme-selector select, .scheme-selector input {
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+        .scheme-selector select:focus, .scheme-selector input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        /* ===== SLAB TABLE ===== */
+        .slab-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .slab-table th {
+            background: #f7fafc;
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .slab-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .slab-table tr:hover td {
+            background: #f7fafc;
+        }
+
+        .slab-highlight {
+            background: #ebf8ff !important;
+            font-weight: 600;
+        }
+        .slab-highlight td {
+            color: #2b6cb0;
+        }
+
+        /* ===== BREAKDOWN ===== */
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-item .label {
+            color: #4a5568;
+            font-weight: 500;
+        }
+        .breakdown-item .label i {
+            width: 24px;
+            color: #4299e1;
+            margin-right: 10px;
+        }
+        .breakdown-item .amount {
+            font-weight: 600;
+        }
+        .breakdown-item .amount.green { color: #38a169; }
+        .breakdown-item .amount.blue { color: #3182ce; }
+        .breakdown-item .amount.purple { color: #805ad5; }
+        .breakdown-item .amount.orange { color: #dd6b20; }
+
+        .total-row {
+            background: #f7fafc;
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .total-row .total-label {
+            color: #2d3748;
+        }
+        .total-row .total-value {
+            color: #2b6cb0;
+            font-size: 24px;
+        }
+
+        /* ===== EMPLOYEE LIST TABLE ===== */
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .employee-table th {
+            background: #f7fafc;
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .employee-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .employee-table tr:hover td {
+            background: #f7fafc;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: #edf2f7;
+            border-radius: 10px;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .rank-badge.gold { background: #fefcbf; color: #975a16; }
+        .rank-badge.silver { background: #e2e8f0; color: #4a5568; }
+        .rank-badge.bronze { background: #fbd38d; color: #7b341e; }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #f7fafc;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #718096;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #2b6cb0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .tab-btn:hover:not(.active) {
+            color: #2d3748;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 35px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+        .modal .form-group {
+            margin-bottom: 18px;
+        }
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #4a5568;
+        }
+        .modal .form-group input, .modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: border 0.3s ease;
+        }
+        .modal .form-group input:focus, .modal .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        .modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+        .modal .modal-actions button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .modal .modal-actions .btn-cancel {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+        .modal .modal-actions .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        .modal .modal-actions .btn-save {
+            background: #4299e1;
+            color: white;
+        }
+        .modal .modal-actions .btn-save:hover {
+            background: #3182ce;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 20px;
+            }
+            .header-right {
+                justify-content: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .scheme-selector {
+                flex-direction: column;
+            }
+            .scheme-selector select, .scheme-selector input {
+                min-width: 100%;
+            }
+            .employee-table {
+                font-size: 12px;
+            }
+            .employee-table th, .employee-table td {
+                padding: 8px 10px;
+            }
+            .modal {
+                padding: 25px;
+                margin: 20px;
+            }
+        }
+
+        /* Utility */
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+        .flex { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .gap-10 { gap: 10px; }
+
+        .chip {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .chip.success { background: #c6f6d5; color: #276749; }
+        .chip.warning { background: #fefcbf; color: #975a16; }
+        .chip.danger { background: #fed7d7; color: #9b2c2c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-left">
+            <h1><i class="fas fa-rocket"></i> Sales Incentive System</h1>
+            <p>Manage, track, and calculate sales incentives in real-time</p>
+        </div>
+        <div class="header-right">
+            <span class="header-badge"><i class="far fa-calendar-alt"></i> June 2026</span>
+            <span class="header-badge"><i class="fas fa-user"></i> Admin</span>
+            <button class="btn-primary" onclick="openModal()">
+                <i class="fas fa-plus"></i> New Scheme
+            </button>
+        </div>
+    </header>
+
+    <!-- ========== STATS ========== -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="label">Total Employees</div>
+            <div class="value blue" id="totalEmployees">24</div>
+            <div class="sub"><i class="fas fa-users"></i> Across 4 roles</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Active Schemes</div>
+            <div class="value green" id="activeSchemes">3</div>
+            <div class="sub"><i class="fas fa-tag"></i> 1 expiring soon</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Units Sold (MTD)</div>
+            <div class="value purple" id="totalUnitsSold">187</div>
+            <div class="sub"><i class="fas fa-car"></i> 12% vs last month</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Incentive Payout</div>
+            <div class="value orange" id="totalPayout">$48,230</div>
+            <div class="sub"><i class="fas fa-coins"></i> Pending approvals: 4</div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN ========== -->
+    <div class="main-grid">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+            <!-- Scheme Selector -->
+            <div class="card mb-20">
+                <div class="scheme-selector">
+                    <select id="schemeSelect" onchange="loadSchemeData()">
+                        <option value="1">MONSOON BONANZA - JUNE 2026</option>
+                        <option value="2">SUMMER SPLASH - MAY 2026</option>
+                        <option value="3">PREMIUM DRIVE - Q2 2026</option>
+                    </select>
+                    <input type="month" id="periodSelect" value="2026-06" onchange="loadSchemeData()">
+                </div>
+                <div class="flex">
+                    <span class="chip success"><i class="fas fa-check-circle"></i> Active</span>
+                    <span style="font-size:13px; color:#718096;"><i class="far fa-clock"></i> 01 Jun 2026 - 30 Jun 2026</span>
+                    <span style="font-size:13px; color:#718096; margin-left:auto;"><i class="fas fa-users"></i> Eligible: GM, Manager, CCE, Sales Exec</span>
+                </div>
+            </div>
+
+            <!-- Volume Slabs -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-layer-group"></i> Volume Slabs</h3>
+                    <span class="badge">Base Parameter</span>
+                </div>
+                <table class="slab-table" id="slabTable">
+                    <thead>
+                        <tr>
+                            <th>Slab</th>
+                            <th>Units (Min - Max)</th>
+                            <th>Incentive Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="slabBody">
+                        <!-- Data loaded by JS -->
+                    </tbody>
+                </table>
+                <div style="margin-top:14px; font-size:13px; color:#718096; background:#f7fafc; padding:10px 14px; border-radius:10px;">
+                    <i class="fas fa-info-circle"></i> Current achievement: <strong id="currentUnitsDisplay">25 units</strong> → 
+                    <span id="currentSlabDisplay" style="font-weight:700; color:#2b6cb0;">Slab 3 (4.0%)</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+
+            <!-- Tabs -->
+            <div class="card" style="padding-bottom:10px;">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('breakdown')"><i class="fas fa-calculator"></i> Breakdown</button>
+                    <button class="tab-btn" onclick="switchTab('employees')"><i class="fas fa-users"></i> Employees</button>
+                    <button class="tab-btn" onclick="switchTab('models')"><i class="fas fa-car"></i> Model-wise</button>
+                </div>
+            </div>
+
+            <!-- TAB 1: Breakdown -->
+            <div class="card tab-content active" id="tabBreakdown">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-invoice"></i> Incentive Breakdown</h3>
+                    <span class="badge" id="employeeNameBadge">Rahul Sharma</span>
+                </div>
+
+                <div id="breakdownContent">
+                    <div class="breakdown-item">
+                        <span class="label"><i class="fas fa-chart-bar"></i> Base Volume Incentive</span>
+                        <span class="amount blue">$10,000</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label"><i class="fas fa-wrench"></i> Add-on Services & Accessories</span>
+                        <span class="amount green">$720</span>
+                    </div>
+                    <div style="padding-left:44px; font-size:13px; color:#a0aec0; margin:-6px 0 6px 0;">
+                        Net Add-on: $18,000 (After $2,000 discount)
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label"><i class="fas fa-car"></i> Model-wise Incentive</span>
+                        <span class="amount purple">$1,750</span>
+                    </div>
+                    <div style="padding-left:44px; font-size:13px; color:#a0aec0; margin:-6px 0 6px 0;">
+                        Model X (10 units) × $100, Model Y (15 units) × $50
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label"><i class="fas fa-exchange-alt"></i> Exchange Bonus</span>
+                        <span class="amount orange">$375</span>
+                    </div>
+                    <div style="padding-left:44px; font-size:13px; color:#a0aec0; margin:-6px 0 6px 0;">
+                        5 exchanges × $75 (Slab 2)
+                    </div>
+
+                    <div class="total-row">
+                        <span class="total-label"><i class="fas fa-trophy"></i> Total Incentive</span>
+                        <span class="total-value" id="totalIncentiveDisplay">$12,845</span>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn-primary" style="background:#4299e1;" onclick="alert('Recalculating...')">
+                        <i class="fas fa-sync-alt"></i> Recalculate
+                    </button>
+                    <button class="btn-secondary" style="color:#2d3748; background:#edf2f7; border-color:#e2e8f0;" onclick="alert('Downloading...')">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 2: Employees -->
+            <div class="card tab-content" id="tabEmployees">
+                <div class="card-header">
+                    <h3><i class="fas fa-trophy"></i> Leaderboard</h3>
+                    <span class="badge">Top Performers</span>
+                </div>
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Role</th>
+                            <th>Units</th>
+                            <th>Target</th>
+                            <th>Incentive</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody">
+                        <!-- Data loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TAB 3: Model-wise -->
+            <div class="card tab-content" id="tabModels">
+                <div class="card-header">
+                    <h3><i class="fas fa-car"></i> Model-wise Incentive</h3>
+                    <span class="badge">Per Unit Rates</span>
+                </div>
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Units Sold</th>
+                            <th>Base Rate</th>
+                            <th>Multiplier</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modelTableBody">
+                        <!-- Data loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div style="text-align:center; padding:20px; color:#a0aec0; font-size:13px; border-top:1px solid #e2e8f0; margin-top:20px;">
+        <i class="fas fa-code"></i> Built with <i class="fas fa-heart" style="color:#e53e3e;"></i> for Sales Teams &bull; v2.0
+    </div>
+
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-overlay" id="newSchemeModal">
+    <div class="modal">
+        <h2><i class="fas fa-plus-circle" style="color:#4299e1;"></i> Create New Scheme</h2>
+        <form id="schemeForm" onsubmit="saveScheme(event)">
+            <div class="form-group">
+                <label>Scheme Title</label>
+                <input type="text" placeholder="e.g. FESTIVE BONANZA - JULY 2026" required>
+            </div>
+            <div class="form-group">
+                <label>Scheme Code</label>
+                <input type="text" placeholder="e.g. FEST-07-2026" required>
+            </div>
+            <div class="form-group">
+                <label>Period</label>
+                <input type="month" value="2026-07" required>
+            </div>
+            <div class="form-group">
+                <label>Eligible Roles</label>
+                <select multiple style="height:80px;">
+                    <option selected>GM</option>
+                    <option selected>Manager</option>
+                    <option selected>CCE</option>
+                    <option selected>Sales Executive</option>
+                </select>
+                <small style="color:#a0aec0;">Hold Ctrl/Cmd to select multiple</small>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox"> Include Sub-dealers (ADBDM)
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Create Scheme</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+    // ============================================
+    // DATA STORE
+    // ============================================
+    const appData = {
+        schemes: {
+            1: {
+                id: 1,
+                title: 'MONSOON BONANZA - JUNE 2026',
+                code: 'MON-06-2026',
+                period: '01-06-2026 to 30-06-2026',
+                eligibleRoles: ['GM', 'Manager', 'CCE', 'Sales Executive'],
+                includeSubdealer: true,
+                slabs: [
+                    { name: 'Slab 1', min: 5, max: 10, rate: 1.5 },
+                    { name: 'Slab 2', min: 11, max: 20, rate: 2.5 },
+                    { name: 'Slab 3', min: 21, max: 30, rate: 4.0 },
+                    { name: 'Slab 4', min: 31, max: null, rate: 5.5 }
+                ],
+                exchangeSlabs: [
+                    { min: 1, max: 3, bonus: 50 },
+                    { min: 4, max: 7, bonus: 75 },
+                    { min: 8, max: null, bonus: 100 }
+                ],
+                modelIncentives: [
+                    { model: 'Model X', units: 10, rate: 100, multiplier: 1.5 },
+                    { model: 'Model Y', units: 15, rate: 50, multiplier: 1.0 },
+                    { model: 'Model Z', units: 0, rate: 150, multiplier: 2.0 }
+                ]
+            },
+            2: {
+                id: 2,
+                title: 'SUMMER SPLASH - MAY 2026',
+                code: 'SUM-05-2026',
+                period: '01-05-2026 to 31-05-2026',
+                eligibleRoles: ['Sales Executive', 'Manager'],
+                includeSubdealer: false,
+                slabs: [
+                    { name: 'Slab 1', min: 3, max: 8, rate: 1.0 },
+                    { name: 'Slab 2', min: 9, max: 15, rate: 2.0 },
+                    { name: 'Slab 3', min: 16, max: 25, rate: 3.5 }
+                ],
+                exchangeSlabs: [
+                    { min: 1, max: 2, bonus: 40 },
+                    { min: 3, max: 5, bonus: 60 }
+                ],
+                modelIncentives: [
+                    { model: 'Model X', units: 8, rate: 80, multiplier: 1.0 },
+                    { model: 'Model Y', units: 12, rate: 40, multiplier: 1.0 }
+                ]
+            },
+            3: {
+                id: 3,
+                title: 'PREMIUM DRIVE - Q2 2026',
+                code: 'PRM-Q2-2026',
+                period: '01-04-2026 to 30-06-2026',
+                eligibleRoles: ['GM', 'Manager'],
+                includeSubdealer: false,
+                slabs: [
+                    { name: 'Slab 1', min: 10, max: 20, rate: 2.0 },
+                    { name: 'Slab 2', min: 21, max: 35, rate: 3.0 },
+                    { name: 'Slab 3', min: 36, max: 50, rate: 4.5 }
+                ],
+                exchangeSlabs: [
+                    { min: 1, max: 5, bonus: 60 },
+                    { min: 6, max: 10, bonus: 90 }
+                ],
+                modelIncentives: [
+                    { model: 'Model X', units: 20, rate: 120, multiplier: 1.2 },
+                    { model: 'Model Z', units: 5, rate: 200, multiplier: 1.8 }
+                ]
+            }
+        },
+
+        // Employee data for leaderboard
+        employees: [
+            { id: 1, name: 'Rahul Sharma', role: 'Sales Executive', units: 25, target: 20, incentive: 12845, rank: 1 },
+            { id: 2, name: 'Priya Patel', role: 'Sales Executive', units: 32, target: 20, incentive: 18200, rank: 2 },
+            { id: 3, name: 'Amit Kumar', role: 'Manager', units: 18, target: 15, incentive: 7200, rank: 3 },
+            { id: 4, name: 'Sneha Reddy', role: 'CCE', units: 12, target: 10, incentive: 5400, rank: 4 },
+            { id: 5, name: 'Vikram Singh', role: 'Sales Executive', units: 8, target: 20, incentive: 3200, rank: 5 },
+            { id: 6, name: 'Ananya Iyer', role: 'GM', units: 45, target: 30, incentive: 28500, rank: 1 },
+            { id: 7, name: 'Deepak Joshi', role: 'Sales Executive', units: 15, target: 20, incentive: 6100, rank: 6 },
+            { id: 8, name: 'Kavya Nair', role: 'CCE', units: 9, target: 10, incentive: 4200, rank: 7 }
+        ],
+
+        addonDetails: {
+            grossAddon: 20000,
+            discountAddon: 2000,
+            netAddon: 18000
+        },
+
+        currentEmployee: 1
+    };
+
+    // ============================================
+    // RENDER FUNCTIONS
+    // ============================================
+
+    function getCurrentScheme() {
+        const id = parseInt(document.getElementById('schemeSelect').value);
+        return appData.schemes[id];
+    }
+
+    function renderSlabs() {
+        const scheme = getCurrentScheme();
+        const tbody = document.getElementById('slabBody');
+        tbody.innerHTML = '';
+        scheme.slabs.forEach((slab, i) => {
+            const maxDisplay = slab.max ? slab.max : '∞';
+            const isHighlighted = (i === 2); // Slab 3 highlighted as example
+            const tr = document.createElement('tr');
+            if (isHighlighted) tr.className = 'slab-highlight';
+            tr.innerHTML = `
+                <td><strong>${slab.name}</strong></td>
+                <td>${slab.min} - ${maxDisplay}</td>
+                <td><strong>${slab.rate}%</strong></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Update current achievement display
+        document.getElementById('currentUnitsDisplay').textContent = '25 units';
+        document.getElementById('currentSlabDisplay').textContent = 'Slab 3 (4.0%)';
+    }
+
+    function renderBreakdown() {
+        // This would come from API/calculation, using static data for demo
+        // Already in HTML, just update total
+        document.getElementById('totalIncentiveDisplay').textContent = '$12,845';
+    }
+
+    function renderEmployees() {
+        const tbody = document.getElementById('employeeTableBody');
+        tbody.innerHTML = '';
+        const sorted = [...appData.employees].sort((a,b) => b.incentive - a.incentive);
+        sorted.forEach((emp, idx) => {
+            const rank = idx + 1;
+            let rankBadge = '';
+            if (rank === 1) rankBadge = '<span class="rank-badge gold">🥇</span>';
+            else if (rank === 2) rankBadge = '<span class="rank-badge silver">🥈</span>';
+            else if (rank === 3) rankBadge = '<span class="rank-badge bronze">🥉</span>';
+            else rankBadge = `<span style="color:#a0aec0;">#${rank}</span>`;
+
+            const pct = Math.min(100, Math.round((emp.units / emp.target) * 100));
+
+            tbody.innerHTML += `
+                <tr onclick="selectEmployee(${emp.id})" style="cursor:pointer;">
+                    <td>${rankBadge}</td>
+                    <td><strong>${emp.name}</strong></td>
+                    <td>${emp.role}</td>
+                    <td><strong>${emp.units}</strong></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="fill" style="width:${pct}%;"></div>
+                        </div>
+                        ${pct}%
+                    </td>
+                    <td><strong>$${emp.incentive.toLocaleString()}</strong></td>
+                </tr>
+            `;
+        });
+    }
+
+    function renderModels() {
+        const scheme = getCurrentScheme();
+        const tbody = document.getElementById('modelTableBody');
+        tbody.innerHTML = '';
+        let totalModelIncentive = 0;
+        scheme.modelIncentives.forEach(m => {
+            const total = m.units * m.rate * m.multiplier;
+            totalModelIncentive += total;
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${m.model}</strong></td>
+                    <td>${m.units}</td>
+                    <td>$${m.rate}</td>
+                    <td>${m.multiplier}x</td>
+                    <td><strong>$${total.toLocaleString()}</strong></td>
+                </tr>
+            `;
+        });
+        // Add total row
+        tbody.innerHTML += `
+            <tr style="background:#f7fafc; font-weight:700;">
+                <td colspan="4" style="text-align:right;">Total Model Incentive</td>
+                <td>$${totalModelIncentive.toLocaleString()}</td>
+            </tr>
+        `;
+    }
+
+    function loadSchemeData() {
+        renderSlabs();
+        renderModels();
+        renderEmployees();
+        renderBreakdown();
+        updateStats();
+    }
+
+    // ============================================
+    // TAB SWITCHING
+    // ============================================
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+        document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // ============================================
+    // EMPLOYEE SELECTION
+    // ============================================
+
+    function selectEmployee(id) {
+        appData.currentEmployee = id;
+        const emp = appData.employees.find(e => e.id === id);
+        if (emp) {
+            document.getElementById('employeeNameBadge').textContent = emp.name;
+            // In real app, reload breakdown for this employee
+            // For demo, we just update the badge
+            alert(`Selected: ${emp.name}\nUnits: ${emp.units}\nIncentive: $${emp.incentive.toLocaleString()}`);
+        }
+        // Switch to breakdown tab
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelector('.tab-btn:first-child').classList.add('active');
+        document.getElementById('tabBreakdown').classList.add('active');
+    }
+
+    // ============================================
+    // STATS UPDATE
+    // ============================================
+
+    function updateStats() {
+        const scheme = getCurrentScheme();
+        const totalEmp = appData.employees.length;
+        const totalUnits = appData.employees.reduce((sum, e) => sum + e.units, 0);
+        const totalIncentive = appData.employees.reduce((sum, e) => sum + e.incentive, 0);
+
+        document.getElementById('totalEmployees').textContent = totalEmp;
+        document.getElementById('totalUnitsSold').textContent = totalUnits;
+        document.getElementById('totalPayout').textContent = '$' + totalIncentive.toLocaleString();
+        document.getElementById('activeSchemes').textContent = Object.keys(appData.schemes).length;
+    }
+
+    // ============================================
+    // MODAL FUNCTIONS
+    // ============================================
+
+    function openModal() {
+        document.getElementById('newSchemeModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('newSchemeModal').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function saveScheme(e) {
+        e.preventDefault();
+        alert('Scheme created successfully! (Demo)');
+        closeModal();
+    }
+
+    // Close modal on overlay click
+    document.getElementById('newSchemeModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSchemeData();
+    });
+
+    // Handle period change
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        loadSchemeData();
+    });
+</script>
+
+</body>
+</html>
